@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class System <T>{
-
+//try
     HashMap<String, AttackOperation> operations;
     HashMap<String,Plane> planes;
     //שמירה של מטוס חדש במידה ולא קיים כבר
