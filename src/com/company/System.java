@@ -1,110 +1,149 @@
 package com.company;
-
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.HashMap;
 import java.util.List;
 
 public class System <T>{
-//try
-    HashMap<String, AttackOperation> operations;
-    HashMap<String,Plane> planes;
-    //שמירה של מטוס חדש במידה ולא קיים כבר
-    public void SavedPlanes(Plane p) {
-        //מבנה נתונים שמתנהג כמו מילון -כל מפתח חייב להיות ייחודי
-        if (planes == null) {
-            planes = new HashMap<>();
-        }
-        if (!planes.containsKey(p.getPlaneId())) {
-            planes.put(p.getPlaneId(), p);
-        } else {
-            System.out.println("This plane is already exist");
-        }
-    }
-
-    //יצירת מבצע מגירה ושמירת אובייקט מסוג מבצע מגירה
-    public void StimulatingOperation(StimulatingOperation s) {
-        if (operations == null) {
-            operations = new HashMap<>();
-        }
-        if (!operations.containsKey(s.getOperationName())) {
-            operations.put(s.getOperationName(), s);
-        } else {
-            System.out.println("This StimulatingOperation is already exist");
-        }
-    }
-
-    public void AttackOrGathering(IntelligenceGathering IOperation, AttackOperation AOperation)
-    {
-        if (operations == null) {
-            operations = new HashMap<>();
-        }
-        /*
-        * if(operations.getkey()
-        * {
-        * if(typeOfClass==1)
-        *     StimulatingOperation
-        * if(typeOfClass==2)
-        *
-        * */
-        if(!operations.containsKey(IOperation.getOperationName()))
-        {
-            operations.put(IOperation.getOperationName(),IOperation);
-        }
-        if(!operations.containsKey(AOperation.getOperationName()))
-        {
-            operations.put(AOperation.getOperationName(),AOperation);
-        }
-        else {
-            System.out.println("This AttackOrGathering is already exist");
-        }
 
 
-    }
-    public void assignPlaneToOperation(AttackOperation operation)
-    {
-      if(!(operation.getNumberOfPlanes()>planes.size()))
-      {
-          for(Plane p: planes.values()) {
-              if ((operation.getEndTime() - operation.getBeginTime() + 1) >=p.getTimeOfLand())
-              {
-                  operation.getPlanes().add(p);
-                  p.setStatus(false);
-              }
-          }
-          if(operation.getPlanes().size()!=operation.getNumberOfPlanes())
-          {
-              System.out.println("There are not enough planes for this operation");
 
-          }
-      }
-    }
 
-    /*syntax*/
-    public List<AttackOperation> operationsAccordingToSpecificTime(double endTime,double beginTime)
-    {
-        //end=5,beg=1,oend=4,obeg=3
-        for(AttackOperation attackOperation: operations.values())
+
+        HashMap<String, Object> operations;
+        HashMap<String,Plane> planes;
+
+        public void SavedPlanes(Plane p) {
+            if (planes == null) {
+                planes = new HashMap<>();
+            }
+            if (!planes.containsKey(p.getPlaneId())) {
+                planes.put(p.getPlaneId(), p);
+            } else {
+                System.out.println("This plane is already exist");
+            }
+        }
+        public  void createOperation(T operation)
         {
 
-        }
+            if (operations == null) {
+                operations = new HashMap<>();
+            }
 
-    }
-    public void updateTimeOfOperation(double endTime,double beginTime, AttackOperation a)
-    {
-        if(!((a.getEndTime()- a.getBeginTime())<(endTime-beginTime)))
+            if(operation.equals(StimulatingOperation.class))
+            {
+                if (!operations.containsKey(((StimulatingOperation) operation).getOperationName())) {
+                    operations.put(((StimulatingOperation) operation).getOperationName(), operation);
+                } else {
+                    System.out.println("This StimulatingOperation is already exist");
+                }
+            }
+            if(operation.equals(IntelligenceGathering.class))
+            {
+                if (!operations.containsKey(((IntelligenceGathering) operation).getOperationName())) {
+                    operations.put(((IntelligenceGathering) operation).getOperationName(), operation);
+                } else {
+                    System.out.println("This IntelligenceGathering is already exist");
+                }
+            }
+            if(operation.equals(AttackOperation.class))
+            {
+                if (!operations.containsKey(((AttackOperation) operation).getOperationName())) {
+                    operations.put(((AttackOperation) operation).getOperationName(), operation);
+                } else {
+                    System.out.println("This AttackOperation is already exist");
+                }
+            }
+
+        }
+        public  void assignPlaneToOperation( T operation)
         {
-            a.setBeginTime(beginTime);
-            a.setEndTime(endTime);
-            assignPlaneToOperation(a)   ;
+            if(operation.equals(IntelligenceGathering.class))
+            {
+                if(!(((IntelligenceGathering) operation).getNumberOfPlanes()>planes.size()))
+                {
+                    for(Plane p: planes.values()) {
+                        if (((IntelligenceGathering) operation).getEndTime() - ((IntelligenceGathering) operation).getBeginTime() + 1>=p.getTimeOfLand())
+                        {
+                            ((IntelligenceGathering) operation).getPlanes().add(p);
+                            p.setStatus(false);
+                        }
+                    }
+                    if(((IntelligenceGathering) operation).getPlanes().size()!=((IntelligenceGathering) operation).getNumberOfPlanes())
+                    {
+                        System.out.println("There are not enough planes for this operation");
+
+                    }
+                }
+            }
+            else if(operation.equals(AttackOperation.class))
+            {
+                if(!(((AttackOperation) operation).getNumberOfPlanes()>planes.size()))
+                {
+                    for(Plane p: planes.values()) {
+                        if (((AttackOperation) operation).getEndTime() - ((AttackOperation) operation).getBeginTime() + 1>=p.getTimeOfLand())
+                        {
+                            ((AttackOperation) operation).getPlanes().add(p);
+                            p.setStatus(false);
+                        }
+                    }
+                    if(((AttackOperation) operation).getPlanes().size()!=((AttackOperation) operation).getNumberOfPlanes())
+                    {
+                        System.out.println("There are not enough planes for this operation");
+
+                    }
+                }
+            }
+            else
+            {
+                System.out.println(" ");
+            }
         }
-        else
+
+        public void updateTimeOfOperation(double endTime,double beginTime, Object operation)
         {
-            System.out.println("there are no side effects after changing schedule ");
+            if(operation.equals(IntelligenceGathering.class)) {
+                if (!((((IntelligenceGathering) operation).getEndTime() - ((IntelligenceGathering) operation).getBeginTime()) < (endTime - beginTime))) {
+                    ((IntelligenceGathering) operation).setBeginTime(beginTime);
+                    ((IntelligenceGathering) operation).setEndTime(endTime);
+                    assignPlaneToOperation((T) operation);
+                } else {
+                    System.out.println("there are no side effects after changing schedule ");
+                }
+            }
+            else if(operation.equals(AttackOperation.class)) {
+                if (!((((AttackOperation) operation).getEndTime() - ((AttackOperation) operation).getBeginTime()) < (endTime - beginTime))) {
+                    ((AttackOperation) operation).setBeginTime(beginTime);
+                    ((AttackOperation) operation).setEndTime(endTime);
+                    assignPlaneToOperation((T) operation);
+                } else {
+                    System.out.println("there are no side effects after changing schedule ");
+                }
+            }
         }
-
-    }
-    public void checkIfOperationIsReady(AttackOperation a)
-    {
-
+        public static boolean isOperationReady(Object operation)
+        {
+            LocalDateTime localDateTime = LocalDateTime.now();
+            if(operation.equals(AttackOperation.class)) {
+                if (((AttackOperation) operation).getNumberOfPlanes() == ((AttackOperation) operation).getPlanes().size() && localDateTime + ((LocalDateTime)((AttackOperation) operation).getBeginTime()) < 10) {
+                    return true;
+                }
+                return false;
+            }
+            if(operation.equals(IntelligenceGathering.class)) {
+                if (((IntelligenceGathering) operation).getNumberOfPlanes() == Math.floor(0.8*((IntelligenceGathering) operation).getPlanes().size()) && localDateTime + ((LocalDateTime)((AttackOperation) operation).getBeginTime()) < 3) {
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        public static void main(String[] args)
+        {
+            Object operation=new StimulatingOperation("bbb","ddd",1,TypeOfCamera.HEAT,"australia");
+        }
     }
 
 
